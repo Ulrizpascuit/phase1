@@ -308,26 +308,6 @@ md"""
 
 """
 
-# ╔═╡ efc4211f-c79d-40f8-be98-0a001730891f
-"""Affiche un graphe"""
-function show(graph::Graph)
-  println("Graph ", name(graph), " has ", nb_nodes(graph), " nodes and ", nb_edges(graph), " edges ")
-  for node in nodes(graph)
-    show(node)
-  end
-  for edge in edges(graph)
-    show(edge)
-  end
-end
-
-# ╔═╡ 4c2003b5-683e-4327-b145-505f40b91203
-using Base.show
-
-# ╔═╡ 660c40be-ed71-4f2b-ad2e-04aaf2f19d33
-function show(edge::AbstractEdge)
-  println("Edge ", name(edge), ", data: ", data(edge))
-end
-
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -363,7 +343,6 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 # ╠═d60f02ce-0a83-4edb-9747-b3de9ba1ae2b
 # ╠═5dfaa4bb-f544-43df-a390-a9e326784fed
 # ╠═7ea81498-700d-4402-bea4-37b5203d088f
-# ╠═4c2003b5-683e-4327-b145-505f40b91203
 # ╟─5b0505f0-ab35-4ebc-9458-1914a54c7bfa
 # ╟─d16af9e4-e9fd-49df-97e4-b6af7193d63f
 # ╟─5b9924f3-f260-40be-8144-53d4fd3e0645
@@ -378,7 +357,6 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 # ╟─5ffd582d-91f5-47d8-a184-d7b62cf76567
 # ╟─2528cbf0-2499-40d8-bfd3-d5aed9927ea9
 # ╟─7f5af2f7-3a44-4650-af58-c7d9f3600f33
-# ╟─660c40be-ed71-4f2b-ad2e-04aaf2f19d33
 # ╟─f63c154d-8d96-4f5f-aee2-bf7c748a04ba
 # ╟─30df8065-0dec-4125-837c-4e12b63cd188
 # ╟─745a99fb-4d60-4b47-8bcf-2625063e44d8
@@ -389,7 +367,6 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 # ╟─672df196-932f-49dc-8f74-06261a9b0c24
 # ╟─08f2d26d-3610-441b-b2dd-53497e904867
 # ╟─790f95ac-38f5-4546-8503-8a969aa33918
-# ╠═efc4211f-c79d-40f8-be98-0a001730891f
 # ╟─b986cefa-821b-47aa-93c3-b1a9422812db
 # ╟─723b6ebd-36be-4ea0-9669-ea9250592d78
 # ╟─08300d8f-c079-4a2e-a102-b70f567f439c
