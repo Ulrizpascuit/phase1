@@ -18,11 +18,24 @@ md"""
 ### Mini rapport: Phase 1 du projet
 """
 
+# ╔═╡ 6c5e67af-41bf-4a5a-936c-66b86b4ee853
+md"""
+##### Mohamed Laghdaf HABIBOULLAH, 2300591
+"""
+
+# ╔═╡ b275d9b3-1c7c-457c-a6cf-5a35dcca52e9
+md"""
+##### Ulrich BARON-FOURNIER, 2021196
+"""
+
 # ╔═╡ 56c69abe-5f9d-433d-87ee-ad4d14d7e4ac
 md""" Le  code se trouve au lien suivant: """
 
 # ╔═╡ c49caeea-0bdd-4cd3-8e50-c739befecd98
 md"""[https://github.com/MohamedLaghdafHABIBOULLAH/mth6412b-starter-code.git](https://github.com/MohamedLaghdafHABIBOULLAH/mth6412b-starter-code.git)"""
+
+# ╔═╡ 2ca058c6-5f4b-47d1-9282-a8803eaf19c5
+md""" Le lecteur peut fork le projet et lancer le fichier main.jl pour retrouver les résultats ci-dessous"""
 
 # ╔═╡ d16af9e4-e9fd-49df-97e4-b6af7193d63f
 md"""
@@ -429,11 +442,18 @@ md"""
 md"""
 ```julia
 function convert_to_node(nodes)
-    vect_nodes = []
-    for (keys, vals) in nodes
-        node = Node(string(keys), vals)
+    vect_nodes = []  # Crée un tableau vide pour stocker les nœuds résultants
+    
+    # Parcourt chaque paire clé-valeur dans le dictionnaire 'nodes'
+    for (key, value) in nodes
+        # Crée un nouveau nœud (Node) en utilisant la clé (convertie en chaîne) et la valeur
+        node = Node(string(key), value)
+        
+        # Ajoute le nœud à 'vect_nodes'
         push!(vect_nodes, node)
     end
+    
+    # Retourne un tableau de type Vector contenant les nœuds créés
     return Vector{typeof(vect_nodes[1])}(vect_nodes)
 end
 ```
@@ -449,9 +469,14 @@ md"""
 md"""
 ```julia
 function convert_to_edge(edge, weight, nodes)
+    # Récupère les nœuds correspondants aux indices edge[1] et edge[2] à partir du tableau de nœuds 'nodes'
     node1 = nodes[edge[1]]
     node2 = nodes[edge[2]]
+    
+    # Crée une nouvelle arête (Edge) avec une clé au format "node1-node2", les nœuds node1 et node2, et le poids spécifié
     edge = Edge(string(edge[1]) * "-" * string(edge[2]), node1, node2, weight)
+    
+    # Retourne l'arête créée
     return edge
 end
 ```
@@ -459,7 +484,7 @@ end
 
 # ╔═╡ c4967e1a-6819-4c22-a9c6-755292f82096
 md"""
-###### c. Enfin, on écrit une fonction qui permet de générer les noeuds dans le cas où l'instance ne contient pas un data pour les noeuds, par défaut on fixe les nodes.data = 0
+###### c. Enfin on écrit une fonction qui permet de générer les noeuds dans le cas où l'instance ne contient pas un data pour les noeuds, par défaut on fixe les nodes.data = 0
 
 """
 
@@ -467,12 +492,59 @@ md"""
 md"""
 ```julia
 function generate_nodes(dim)
-    vect_nodes = []
+    vect_nodes = []  # Crée un tableau vide pour stocker les nœuds résultants
+    
+    # Parcourt les entiers de 1 à 'dim' inclus
     for i = 1:dim
+        # Crée un nouveau nœud (Node) avec une clé basée sur la valeur de 'i' et une valeur initiale de 0
         node = Node(string(i), 0)
+        
+        # Ajoute le nœud à 'vect_nodes'
         push!(vect_nodes, node)
     end
+    
+    # Retourne un tableau de type Vector contenant les nœuds créés
     return Vector{typeof(vect_nodes[1])}(vect_nodes)
+end
+```
+"""
+
+# ╔═╡ 6bec5999-67ea-4a77-aa24-e605e705330e
+md"""
+###### d. Voici la fonction qui générer graph\_from\_instance
+
+"""
+
+# ╔═╡ 679ccaae-cfa5-40ac-babd-f41dba2237b6
+md"""
+```julia
+function graph_from_instance(filename::String)
+    # Lecture de l'en-tête du fichier et extraction de la dimension et des arêtes
+    header = read_header(filename)
+    dim = parse(Int, header["DIMENSION"])
+    edges_inst, weights_inst = read_edges(header, filename)
+
+    # Vérification du type de données d'affichage et génération des nœuds en conséquence
+    if header["DISPLAY_DATA_TYPE"] == "None"
+        nodes = generate_nodes(dim)
+    else
+        nodes_inst = read_nodes(header, filename)
+        nodes = convert_to_node(nodes_inst)
+    end
+
+    # Conversion de la première arête et création du graphe initial
+    edge = convert_to_edge(edges_inst[1], weights_inst[1], nodes)
+    graph = Graph(header["NAME"], nodes, [edge])
+
+    # Ajout des arêtes restantes au graphe
+    if length(edges_inst) > 1
+        for i = 2:length(edges_inst)
+            edges = convert_to_edge(edges_inst[i], weights_inst[i], nodes)
+            add_edge!(graph, edges)
+        end
+    end
+
+    return graph
 end
 ```
 """
@@ -1162,8 +1234,11 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 # ╠═5dfaa4bb-f544-43df-a390-a9e326784fed
 # ╠═7ea81498-700d-4402-bea4-37b5203d088f
 # ╟─5b0505f0-ab35-4ebc-9458-1914a54c7bfa
+# ╟─6c5e67af-41bf-4a5a-936c-66b86b4ee853
+# ╟─b275d9b3-1c7c-457c-a6cf-5a35dcca52e9
 # ╟─56c69abe-5f9d-433d-87ee-ad4d14d7e4ac
 # ╟─c49caeea-0bdd-4cd3-8e50-c739befecd98
+# ╟─2ca058c6-5f4b-47d1-9282-a8803eaf19c5
 # ╟─d16af9e4-e9fd-49df-97e4-b6af7193d63f
 # ╟─5b9924f3-f260-40be-8144-53d4fd3e0645
 # ╟─905d4a8a-9d15-45b3-8e3a-ffb33cd835b3
@@ -1205,8 +1280,10 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 # ╟─22ac3ee9-240c-4ce4-b715-f39d2cfa3d19
 # ╟─d6bda406-8816-498a-ba04-a44ee55b22f8
 # ╟─eeb72bd5-07e6-4929-ae86-75b558b9faea
-# ╠═c4967e1a-6819-4c22-a9c6-755292f82096
+# ╟─c4967e1a-6819-4c22-a9c6-755292f82096
 # ╟─d94e7200-a865-43a3-b925-16d8f5bb77eb
+# ╟─6bec5999-67ea-4a77-aa24-e605e705330e
+# ╟─679ccaae-cfa5-40ac-babd-f41dba2237b6
 # ╟─b7b7fbe5-3916-40df-a234-af6323f59778
 # ╟─862508d7-df53-475e-9120-65d2190f9b42
 # ╟─0bffd22b-a0fe-4422-b499-f3fd4079b057
